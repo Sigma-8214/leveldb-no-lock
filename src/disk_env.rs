@@ -120,22 +120,6 @@ impl Env for PosixDiskEnv {
                 .open(p)
                 .map_err(|e| map_err_with_name("lock", p, e))?;
 
-            match f.try_lock_exclusive() {
-                Err(err) if err.kind() == ErrorKind::WouldBlock => {
-                    return Err(Status::new(
-                        StatusCode::LockError,
-                        "lock on database is already held by different process",
-                    ))
-                }
-                Err(_) => {
-                    return Err(Status::new(
-                        StatusCode::Errno(errno::errno()),
-                        &format!("unknown lock error on file {:?} (file {})", f, p.display()),
-                    ))
-                }
-                _ => (),
-            };
-
             locks.insert(p.to_str().unwrap().to_string(), f);
             let lock = FileLock {
                 id: p.to_str().unwrap().to_string(),
@@ -151,10 +135,7 @@ impl Env for PosixDiskEnv {
                 &format!("unlocking a file that is not locked: {}", l.id),
             )
         } else {
-            let f = locks.remove(&l.id).unwrap();
-            if f.unlock().is_err() {
-                return err(StatusCode::LockError, &format!("unlock failed: {}", l.id));
-            }
+            locks.remove(&l.id).unwrap();
             Ok(())
         }
     }
