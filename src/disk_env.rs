@@ -1,11 +1,10 @@
 use crate::env::{path_to_str, Env, FileLock, Logger, RandomAccess};
 use crate::env_common::{micros, sleep_for};
 use crate::error::{err, Result, Status, StatusCode};
-use fs2::FileExt;
 
 use std::collections::HashMap;
 use std::fs::{self, File};
-use std::io::{self, ErrorKind, Read, Write};
+use std::io::{self, Read, Write};
 use std::iter::FromIterator;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};

@@ -186,17 +186,13 @@ impl DB {
         let mut log_files = vec![];
 
         for file in &filenames {
-            match parse_file_name(&file) {
-                Ok((num, typ)) => {
-                    expected.remove(&num);
-                    if typ == FileType::Log
-                        && (num >= self.vset.borrow().log_num
-                            || num == self.vset.borrow().prev_log_num)
-                    {
-                        log_files.push(num);
-                    }
+            if let Ok((num, typ)) = parse_file_name(&file) {
+                expected.remove(&num);
+                if typ == FileType::Log
+                    && (num >= self.vset.borrow().log_num || num == self.vset.borrow().prev_log_num)
+                {
+                    log_files.push(num);
                 }
-                Err(e) => return Err(e.annotate(format!("While parsing {:?}", file))),
             }
         }
         if !expected.is_empty() {
@@ -567,7 +563,8 @@ impl DB {
     /// make_room_for_write checks if the memtable has become too large, and triggers a compaction
     /// if it's the case.
     fn make_room_for_write(&mut self, force: bool) -> Result<()> {
-        if !force && self.mem.approx_mem_usage() < self.opt.write_buffer_size || self.mem.len() == 0 {
+        if !force && self.mem.approx_mem_usage() < self.opt.write_buffer_size || self.mem.len() == 0
+        {
             Ok(())
         } else {
             // Create new memtable.
