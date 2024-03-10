@@ -142,9 +142,10 @@ pub enum FileType {
 
 pub fn parse_file_name<P: AsRef<Path>>(ff: P) -> Result<(FileNum, FileType)> {
     let f = ff.as_ref().to_str().unwrap();
+    dbg!(f);
     if f == "CURRENT" {
         return Ok((0, FileType::Current));
-    } else if f == "LOCK" {
+    } else if f.starts_with("LOCK") {
         return Ok((0, FileType::DBLock));
     } else if f == "LOG" || f == "LOG.old" {
         return Ok((0, FileType::InfoLog));

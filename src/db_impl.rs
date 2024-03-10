@@ -1063,7 +1063,7 @@ fn log_file_name(db: &Path, num: FileNum) -> PathBuf {
 }
 
 fn lock_file_name(db: &Path) -> PathBuf {
-    db.join("LOCK-FILE")
+    db.join("LOCK-NEW")
 }
 
 /// open_info_log opens an info log file in the given database. It transparently returns a
