@@ -1,5 +1,8 @@
 # leveldb-rs
 
+> This fork allows opening leveldb databases that are also open by another process.
+> Yes its incredibly hacky and should not actually be used.
+
 [![crates.io](https://img.shields.io/crates/v/rusty-leveldb.svg)](https://crates.io/crates/rusty-leveldb)
 
 A fully compatible implementation of LevelDB in Rust. (any incompatibility is a
