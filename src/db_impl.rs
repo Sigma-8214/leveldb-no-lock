@@ -346,10 +346,6 @@ impl DB {
 
     /// acquire_lock acquires the lock file.
     fn acquire_lock(&mut self) -> Result<()> {
-        if self.opt.no_lock_check {
-            return Ok(());
-        }
-
         let lock_r = self.opt.env.lock(Path::new(&lock_file_name(&self.path)));
         match lock_r {
             Ok(lockfile) => {
@@ -571,8 +567,7 @@ impl DB {
     /// make_room_for_write checks if the memtable has become too large, and triggers a compaction
     /// if it's the case.
     fn make_room_for_write(&mut self, force: bool) -> Result<()> {
-        if !force && self.mem.approx_mem_usage() < self.opt.write_buffer_size || self.mem.len() == 0
-        {
+        if !force && self.mem.approx_mem_usage() < self.opt.write_buffer_size || self.mem.len() == 0 {
             Ok(())
         } else {
             // Create new memtable.

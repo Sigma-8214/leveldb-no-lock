@@ -46,9 +46,6 @@ pub struct Options {
     pub reuse_logs: bool,
     pub reuse_manifest: bool,
     pub filter_policy: filter::BoxedFilterPolicy,
-
-    // kinda unsafe but who cares
-    pub no_lock_check: bool,
 }
 
 #[cfg(feature = "fs")]
@@ -78,7 +75,6 @@ impl Default for Options {
             compressor: 0,
             compressor_list: Rc::new(CompressorList::default()),
             filter_policy: Rc::new(Box::new(filter::BloomPolicy::new(DEFAULT_BITS_PER_KEY))),
-            no_lock_check: false,
         }
     }
 }
